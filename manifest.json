@@ -1,0 +1,16 @@
+{
+  "name": "锂矿成本计算器",
+  "short_name": "锂矿计算",
+  "description": "锂矿成本计算模型 - 盛锦高科",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#ff6b35",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/twbs/icons/main/icons/calculator-fill.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
