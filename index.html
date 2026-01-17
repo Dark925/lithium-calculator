@@ -189,6 +189,50 @@
             color: #ff6b35;
             letter-spacing: 0.5px;
         }
+
+        /* 深色模式兼容性修复 - 新增部分 */
+        @media (prefers-color-scheme: dark) {
+            /* 确保滑块轨道在深色模式下保持可见 */
+            input[type="range"] {
+                background: #e0e0e0 !important;
+            }
+            
+            input[type="range"]::-webkit-slider-track {
+                background: #e0e0e0 !important;
+            }
+            
+            input[type="range"]::-moz-range-track {
+                background: #e0e0e0 !important;
+            }
+            
+            /* 增强滑块thumb的可见性 */
+            input[type="range"]::-webkit-slider-thumb {
+                background: #ff6b35 !important;
+                border: 3px solid #ffffff !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2), 
+                          0 0 0 2px rgba(255, 107, 53, 0.3) !important;
+            }
+            
+            input[type="range"]::-moz-range-thumb {
+                background: #ff6b35 !important;
+                border: 3px solid #ffffff !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2),
+                          0 0 0 2px rgba(255, 107, 53, 0.3) !important;
+            }
+            
+            /* 滑块激活状态增强 */
+            input[type="range"]:active::-webkit-slider-thumb {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 
+                          0 3px 8px rgba(0,0,0,0.3) !important;
+            }
+            
+            input[type="range"]:active::-moz-range-thumb {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 
+                          0 3px 8px rgba(0,0,0,0.3) !important;
+            }
+        }
     </style>
 </head>
 <body>
