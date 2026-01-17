@@ -1,75 +1,500 @@
-/* 滑块样式 - 精确对应小程序slider，添加深色模式兼容 */
-.slider-container {
-    width: 100%;
-    margin: 10px 0;
-}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>锂矿成本计算模型 - 盛锦高科</title>
+    <style>
+        /* 页面容器 - 铺满全屏 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            height: 100%;
+            background: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .page-container {
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
 
-/* 滑块轨道 - 使用固定颜色，不受深色模式影响 */
-input[type="range"] {
-    width: 100%;
-    height: 4px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: #e0e0e0; /* 固定浅灰色轨道背景 */
-    border-radius: 2px;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: pan-y;
-    border: none; /* 移除可能被深色模式影响的边框 */
-}
+        /* 头部区域 */
+        .header {
+            padding: 30px 20px 15px;
+            text-align: center;
+        }
 
-/* 滑块轨道 - WebKit */
-input[type="range"]::-webkit-slider-track {
-    width: 100%;
-    height: 4px;
-    background: #e0e0e0; /* 固定浅灰色轨道背景 */
-    border-radius: 2px;
-    border: none; /* 移除边框 */
-}
+        .app-title {
+            display: block;
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: 300;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
 
-/* 滑块轨道 - Firefox */
-input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 4px;
-    background: #e0e0e0; /* 固定浅灰色轨道背景 */
-    border-radius: 2px;
-    border: none; /* 移除边框 */
-}
+        .page-title {
+            display: block;
+            font-size: 24px;
+            color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
 
-/* 滑块thumb - 使用固定颜色和边框 */
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #ff6b35; /* 固定橙色滑块 */
-    cursor: pointer;
-    border: 3px solid #ffffff; /* 固定白色边框 */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    -webkit-tap-highlight-color: transparent;
-    /* 添加内阴影，确保在深色背景下可见 */
-    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.3), 0 2px 5px rgba(0,0,0,0.2);
-}
+        /* 主内容区域 - 铺满剩余空间 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 15px 20px;
+        }
 
-/* 滑块thumb - Firefox */
-input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #ff6b35; /* 固定橙色滑块 */
-    cursor: pointer;
-    border: 3px solid #ffffff; /* 固定白色边框 */
-    /* 添加内阴影，确保在深色背景下可见 */
-    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.3), 0 2px 5px rgba(0,0,0,0.2);
-}
+        /* 参数卡片 */
+        .param-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
 
-/* 滑块激活状态 */
-input[type="range"]:active::-webkit-slider-thumb {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 0 3px 8px rgba(0,0,0,0.3);
-}
+        .param-item {
+            margin-bottom: 25px;
+        }
 
-input[type="range"]:active::-moz-range-thumb {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 0 3px 8px rgba(0,0,0,0.3);
-}
+        .param-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .param-name {
+            font-size: 15px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .param-value {
+            font-size: 16px;
+            color: #ff6b35;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: right;
+        }
+
+        /* 滑块样式 - 精确对应小程序slider */
+        .slider-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: #e0e0e0;
+            border-radius: 2px;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: pan-y;
+        }
+
+        /* 滑块轨道 */
+        input[type="range"]::-webkit-slider-track {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+
+        /* 滑块滑块 */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b35;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Firefox兼容 */
+        input[type="range"]::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b35;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .param-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #999999;
+            margin-top: 5px;
+        }
+
+        /* 结果卡片 */
+        .result-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 17px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 16px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff6b35;
+            letter-spacing: 0.5px;
+        }
+
+        /* 深色模式兼容性修复 - 新增部分 */
+        @media (prefers-color-scheme: dark) {
+            /* 确保滑块轨道在深色模式下保持可见 */
+            input[type="range"] {
+                background: #e0e0e0 !important;
+            }
+            
+            input[type="range"]::-webkit-slider-track {
+                background: #e0e0e0 !important;
+            }
+            
+            input[type="range"]::-moz-range-track {
+                background: #e0e0e0 !important;
+            }
+            
+            /* 增强滑块thumb的可见性 */
+            input[type="range"]::-webkit-slider-thumb {
+                background: #ff6b35 !important;
+                border: 3px solid #ffffff !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2), 
+                          0 0 0 2px rgba(255, 107, 53, 0.3) !important;
+            }
+            
+            input[type="range"]::-moz-range-thumb {
+                background: #ff6b35 !important;
+                border: 3px solid #ffffff !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2),
+                          0 0 0 2px rgba(255, 107, 53, 0.3) !important;
+            }
+            
+            /* 滑块激活状态增强 */
+            input[type="range"]:active::-webkit-slider-thumb {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 
+                          0 3px 8px rgba(0,0,0,0.3) !important;
+            }
+            
+            input[type="range"]:active::-moz-range-thumb {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.4), 
+                          0 3px 8px rgba(0,0,0,0.3) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 顶部标题区域 -->
+        <div class="header">
+            <span class="app-title">盛锦高科</span>
+            <span class="page-title">锂矿成本计算模型</span>
+        </div>
+
+        <!-- 主内容区域 - 铺满剩余空间 -->
+        <div class="main-content">
+            <!-- 参数设置卡片 -->
+            <div class="param-card">
+                <!-- 碳酸锂期货价格 -->
+                <div class="param-item">
+                    <div class="param-header">
+                        <span class="param-name">碳酸锂期货价格(元/吨)</span>
+                        <span class="param-value" id="lithiumPriceValue">¥ 120,000</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="lithiumPrice" min="80000" max="250000" step="1" value="120000">
+                    </div>
+                    <div class="param-range">
+                        <span>¥80000</span>
+                        <span>¥250000</span>
+                    </div>
+                </div>
+
+                <!-- 加工费 -->
+                <div class="param-item">
+                    <div class="param-header">
+                        <span class="param-name">加工费(元/吨)</span>
+                        <span class="param-value" id="processingFeeValue">¥ 20,000</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="processingFee" min="15000" max="35000" step="1" value="20000">
+                    </div>
+                    <div class="param-range">
+                        <span>¥15000</span>
+                        <span>¥35000</span>
+                    </div>
+                </div>
+
+                <!-- 回收率 -->
+                <div class="param-item">
+                    <div class="param-header">
+                        <span class="param-name">回收率(%)</span>
+                        <span class="param-value" id="recoveryRateValue">75%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="recoveryRate" min="70" max="90" step="1" value="75">
+                    </div>
+                    <div class="param-range">
+                        <span>70%</span>
+                        <span>90%</span>
+                    </div>
+                </div>
+
+                <!-- 氧化锂含量 -->
+                <div class="param-item">
+                    <div class="param-header">
+                        <span class="param-name">氧化锂含量(%)</span>
+                        <span class="param-value" id="licooContentValue">4.0%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="licooContent" min="1.0" max="8" step="0.01" value="4.0">
+                    </div>
+                    <div class="param-range">
+                        <span>1.0%</span>
+                        <span>8.0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 结果显示区域 -->
+            <div class="result-card">
+                <div class="result-item">
+                    <span class="result-label">锂矿吨度(元/吨度)</span>
+                    <span class="result-value" id="tonnageResult">¥ 1,855</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">锂矿单价(元/吨)</span>
+                    <span class="result-value" id="unitPriceResult">¥ 7,420</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据状态 - 与小程序data完全一致
+        const state = {
+            lithiumPrice: 120000,    // 碳酸锂期货价格
+            processingFee: 20000,    // 加工费
+            recoveryRate: 75,        // 回收率
+            licooContent: 4.0       // 氧化锂含量
+        };
+
+        // 获取DOM元素
+        const lithiumPriceSlider = document.getElementById('lithiumPrice');
+        const lithiumPriceValue = document.getElementById('lithiumPriceValue');
+        const processingFeeSlider = document.getElementById('processingFee');
+        const processingFeeValue = document.getElementById('processingFeeValue');
+        const recoveryRateSlider = document.getElementById('recoveryRate');
+        const recoveryRateValue = document.getElementById('recoveryRateValue');
+        const licooContentSlider = document.getElementById('licooContent');
+        const licooContentValue = document.getElementById('licooContentValue');
+        const tonnageResult = document.getElementById('tonnageResult');
+        const unitPriceResult = document.getElementById('unitPriceResult');
+
+        // 初始化
+        updateDisplay();
+        calculateResult();
+
+        // === 核心工具函数（与小程序完全一致） ===
+        
+        // 自动吸附到指定步长
+        function snapToStep(value, step) {
+            return Math.round(value / step) * step;
+        }
+
+        // 高精度浮点数处理函数
+        function toPreciseFloat(number, precision) {
+            const factor = Math.pow(10, precision);
+            return Math.round(number * factor) / factor;
+        }
+
+        // === 显示更新函数 ===
+        
+        function updateDisplay() {
+            // 与小程序显示格式完全一致
+            lithiumPriceValue.textContent = '¥ ' + state.lithiumPrice.toLocaleString();
+            processingFeeValue.textContent = '¥ ' + state.processingFee.toLocaleString();
+            recoveryRateValue.textContent = state.recoveryRate + '%';
+            licooContentValue.textContent = state.licooContent.toFixed(1) + '%';
+        }
+
+        // === 核心计算函数（与小程序calculateResult完全一致） ===
+        
+        function calculateResult() {
+            const { lithiumPrice, processingFee, recoveryRate, licooContent } = state;
+            
+            // 1. 成本价 = 期货价 - 加工费
+            const costPrice = lithiumPrice - processingFee;
+            
+            // 2. 回收率转换为小数（使用精度控制）
+            const recoveryDecimal = toPreciseFloat(recoveryRate / 100, 2);
+            
+            // 3. 吨耗计算 - 关键修复点
+            // 对每个乘法步骤进行精度控制
+            const step1 = toPreciseFloat(licooContent * recoveryDecimal, 4);
+            const step2 = toPreciseFloat(step1 * 0.4645, 4);
+            const tonConsumption = toPreciseFloat(18.78 / step2, 4);
+            
+            // 4. 锂矿单价 = 成本价 ÷ 吨耗
+            const unitPrice = toPreciseFloat(costPrice / tonConsumption, 2);
+            
+            // 5. 锂矿吨度 = 锂矿单价 ÷ 氧化锂含量
+            const tonnagePrice = toPreciseFloat(unitPrice / licooContent, 2);
+            
+            // 对最终结果进行四舍五入（与小程序完全一致）
+            tonnageResult.textContent = '¥ ' + Math.round(tonnagePrice).toLocaleString();
+            unitPriceResult.textContent = '¥ ' + Math.round(unitPrice).toLocaleString();
+        }
+
+        // === 事件处理函数（对应小程序的bindchanging和bindchange） ===
+        
+        // 碳酸锂价格变化 - 实时滑动
+        function handleLithiumPriceInput() {
+            const value = parseInt(lithiumPriceSlider.value);
+            const snappedValue = snapToStep(value, 500);
+            state.lithiumPrice = snappedValue;
+            updateDisplay();
+            calculateResult();
+        }
+        
+        // 碳酸锂价格变化 - 滑动结束
+        function handleLithiumPriceChange() {
+            const value = parseInt(lithiumPriceSlider.value);
+            const snappedValue = snapToStep(value, 500);
+            state.lithiumPrice = snappedValue;
+            lithiumPriceSlider.value = snappedValue; // 更新滑块位置
+            updateDisplay();
+            calculateResult();
+        }
+
+        // 加工费变化 - 实时滑动
+        function handleProcessingFeeInput() {
+            const value = parseInt(processingFeeSlider.value);
+            const snappedValue = snapToStep(value, 500);
+            state.processingFee = snappedValue;
+            updateDisplay();
+            calculateResult();
+        }
+        
+        // 加工费变化 - 滑动结束
+        function handleProcessingFeeChange() {
+            const value = parseInt(processingFeeSlider.value);
+            const snappedValue = snapToStep(value, 500);
+            state.processingFee = snappedValue;
+            processingFeeSlider.value = snappedValue; // 更新滑块位置
+            updateDisplay();
+            calculateResult();
+        }
+
+        // 回收率变化 - 实时滑动
+        function handleRecoveryRateInput() {
+            const value = parseInt(recoveryRateSlider.value);
+            const snappedValue = snapToStep(value, 1);
+            state.recoveryRate = snappedValue;
+            updateDisplay();
+            calculateResult();
+        }
+        
+        // 回收率变化 - 滑动结束
+        function handleRecoveryRateChange() {
+            const value = parseInt(recoveryRateSlider.value);
+            const snappedValue = snapToStep(value, 1);
+            state.recoveryRate = snappedValue;
+            recoveryRateSlider.value = snappedValue; // 更新滑块位置
+            updateDisplay();
+            calculateResult();
+        }
+
+        // 氧化锂含量变化 - 实时滑动
+        function handleLicooContentInput() {
+            const value = parseFloat(licooContentSlider.value);
+            const snappedValue = snapToStep(value, 0.1);
+            const preciseValue = toPreciseFloat(snappedValue, 1);
+            state.licooContent = preciseValue;
+            updateDisplay();
+            calculateResult();
+        }
+        
+        // 氧化锂含量变化 - 滑动结束
+        function handleLicooContentChange() {
+            const value = parseFloat(licooContentSlider.value);
+            const snappedValue = snapToStep(value, 0.1);
+            const preciseValue = toPreciseFloat(snappedValue, 1);
+            state.licooContent = preciseValue;
+            licooContentSlider.value = preciseValue; // 更新滑块位置
+            updateDisplay();
+            calculateResult();
+        }
+
+        // === 绑定事件监听（对应小程序WXML中的bindchanging和bindchange） ===
+        
+        // 碳酸锂价格滑块事件
+        lithiumPriceSlider.addEventListener('input', handleLithiumPriceInput);
+        lithiumPriceSlider.addEventListener('change', handleLithiumPriceChange);
+        
+        // 加工费滑块事件
+        processingFeeSlider.addEventListener('input', handleProcessingFeeInput);
+        processingFeeSlider.addEventListener('change', handleProcessingFeeChange);
+        
+        // 回收率滑块事件
+        recoveryRateSlider.addEventListener('input', handleRecoveryRateInput);
+        recoveryRateSlider.addEventListener('change', handleRecoveryRateChange);
+        
+        // 氧化锂含量滑块事件
+        licooContentSlider.addEventListener('input', handleLicooContentInput);
+        licooContentSlider.addEventListener('change', handleLicooContentChange);
+    </script>
+</body>
+</html>
